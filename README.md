@@ -1,6 +1,8 @@
 # ops-copilot
 
 [![CI](https://github.com/BenjaminJornet/ops-copilot/actions/workflows/ci.yml/badge.svg)](https://github.com/BenjaminJornet/ops-copilot/actions/workflows/ci.yml)
+[![PyPI](https://img.shields.io/pypi/v/ops-copilot.svg)](https://pypi.org/project/ops-copilot/)
+[![Downloads](https://static.pepy.tech/badge/ops-copilot/month)](https://pepy.tech/project/ops-copilot)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.11%2B-blue.svg)](pyproject.toml)
 

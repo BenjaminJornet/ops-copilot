@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 import string
 from typing import Any
 
@@ -21,6 +22,7 @@ class ShellTool(RemoteTool):
 
     async def execute(self, **kwargs: Any) -> ToolResult:
         try:
+            self._validate_parameters(kwargs)
             command = self._render_command(kwargs)
             output = await self._run_cmd(command, timeout=self.timeout)
             if output.startswith("[ERROR]"):
@@ -28,6 +30,30 @@ class ShellTool(RemoteTool):
             return ToolResult(output=output)
         except KeyError as exc:
             return ToolResult(success=False, error=f"Missing command parameter: {exc.args[0]}")
+        except ValueError as exc:
+            return ToolResult(success=False, error=str(exc))
+
+    def _validate_parameters(self, values: dict[str, Any]) -> None:
+        definitions = self.meta.get("parameters", {})
+        for name, value in values.items():
+            if value is None or name == "no_input":
+                continue
+            text = str(value)
+            if "\x00" in text or "\n" in text or "\r" in text:
+                raise ValueError(f"Parameter {name!r} contains forbidden control characters")
+
+            definition = definitions.get(name, {})
+            allowed_values = definition.get("allowed_values")
+            if (
+                allowed_values is not None
+                and value not in allowed_values
+                and text not in allowed_values
+            ):
+                raise ValueError(f"Parameter {name!r} is not in the allowed values list")
+
+            pattern = definition.get("pattern")
+            if pattern and re.fullmatch(str(pattern), text) is None:
+                raise ValueError(f"Parameter {name!r} does not match the required pattern")
 
     def _render_command(self, values: dict[str, Any]) -> str:
         formatter = string.Formatter()

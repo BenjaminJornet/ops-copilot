@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "ops-copilot"
-version = "0.1.0"
+version = "0.1.2"
 description = "Self-hosted SRE investigation copilot with YAML tools, SSH execution, SSE streaming, and secret redaction."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -40,6 +40,9 @@ server = ["fastapi>=0.115", "sse-starlette>=2", "uvicorn>=0.32"]
 [project.urls]
 Homepage = "https://github.com/benjaminjornet/ops-copilot"
 Issues = "https://github.com/benjaminjornet/ops-copilot/issues"
+Documentation = "https://github.com/BenjaminJornet/ops-copilot#readme"
+Changelog = "https://github.com/BenjaminJornet/ops-copilot/blob/main/CHANGELOG.md"
+PyPI = "https://pypi.org/project/ops-copilot/"
 
 [dependency-groups]
 dev = [
@@ -50,6 +53,7 @@ dev = [
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/ops_copilot"]
+artifacts = ["src/ops_copilot/py.typed"]
 
 [tool.ruff]
 line-length = 100

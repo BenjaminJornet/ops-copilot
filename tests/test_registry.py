@@ -65,3 +65,77 @@ tools:
     result = await tool._arun(service="api", since="5 minutes ago")
 
     assert "journalctl -u api --since '5 minutes ago'" in result
+
+
+@pytest.mark.asyncio
+async def test_shell_tool_rejects_control_characters(tmp_path):
+    config = tmp_path / "tools.yaml"
+    config.write_text(
+        """
+tools:
+  - name: logs
+    type: shell
+    description: Logs.
+    command: journalctl -u {service}
+    parameters:
+      service:
+        type: string
+""",
+        encoding="utf-8",
+    )
+    tool = ToolRegistry(FakeSSH(), config_path=config).load()[0]
+
+    result = await tool._arun(service="api\nwhoami")
+
+    assert result.startswith("[TOOL ERROR]")
+    assert "forbidden control characters" in result
+
+
+@pytest.mark.asyncio
+async def test_shell_tool_enforces_allowed_values(tmp_path):
+    config = tmp_path / "tools.yaml"
+    config.write_text(
+        """
+tools:
+  - name: logs
+    type: shell
+    description: Logs.
+    command: journalctl -u {service}
+    parameters:
+      service:
+        type: string
+        allowed_values: [api, worker]
+""",
+        encoding="utf-8",
+    )
+    tool = ToolRegistry(FakeSSH(), config_path=config).load()[0]
+
+    assert "journalctl -u api" in await tool._arun(service="api")
+    result = await tool._arun(service="database")
+    assert result.startswith("[TOOL ERROR]")
+    assert "allowed values" in result
+
+
+@pytest.mark.asyncio
+async def test_shell_tool_enforces_regex_pattern(tmp_path):
+    config = tmp_path / "tools.yaml"
+    config.write_text(
+        r"""
+tools:
+  - name: logs
+    type: shell
+    description: Logs.
+    command: journalctl -u {service}
+    parameters:
+      service:
+        type: string
+        pattern: "[a-z][a-z0-9_-]{0,31}"
+""",
+        encoding="utf-8",
+    )
+    tool = ToolRegistry(FakeSSH(), config_path=config).load()[0]
+
+    assert "journalctl -u api-1" in await tool._arun(service="api-1")
+    result = await tool._arun(service="../../etc/passwd")
+    assert result.startswith("[TOOL ERROR]")
+    assert "required pattern" in result

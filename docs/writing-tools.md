@@ -37,6 +37,20 @@ Supported parameter types:
 - `number`
 - `boolean`
 
+Optional safety constraints:
+
+```yaml
+parameters:
+  service:
+    type: string
+    allowed_values: [api, worker]
+  since:
+    type: string
+    pattern: "[0-9]+ (minutes|hours) ago"
+```
+
+`ShellTool` rejects parameter values containing newlines, carriage returns, or null bytes. `allowed_values` and `pattern` add narrow validation before command rendering. These checks reduce accidental injection risk, but they do not make arbitrary shell templates safe.
+
 ## Custom Python tools
 
 Custom tools subclass `RemoteTool` and return `ToolResult`.

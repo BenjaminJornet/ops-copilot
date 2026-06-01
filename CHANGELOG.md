@@ -2,10 +2,14 @@
 
 ## Unreleased
 
+## 0.1.2
+
 - Added maintainer documentation, security policy, release process, and issue/PR templates.
 - Added security model, tool-writing, server, and maintenance-workflow documentation.
 - Added local demo and custom tool examples.
 - Added build and manual publish workflows.
+- Added PyPI metadata, badges, and typed package marker.
+- Added basic shell parameter validation controls for safer YAML tools.
 
 ## 0.1.0
 
