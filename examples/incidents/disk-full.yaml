@@ -1,0 +1,18 @@
+name: disk-full
+summary: Root filesystem is near capacity and may break deploys.
+question: Why is the host running out of disk space?
+fake_outputs:
+  disk_usage: |
+    Filesystem Size Used Avail Use% Mounted on
+    /dev/vda1   40G  38G  1.2G  97% /
+  largest_dirs: |
+    21G /var/log/app
+    9G /var/lib/docker
+    2G /home/deploy
+expected_evidence:
+  - root filesystem at 97 percent
+  - application logs are the largest directory
+safe_next_steps:
+  - inspect log rotation settings
+  - archive or rotate reviewed logs
+  - avoid destructive cleanup without approval

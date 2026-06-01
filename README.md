@@ -2,7 +2,6 @@
 
 [![CI](https://github.com/BenjaminJornet/ops-copilot/actions/workflows/ci.yml/badge.svg)](https://github.com/BenjaminJornet/ops-copilot/actions/workflows/ci.yml)
 [![PyPI](https://img.shields.io/pypi/v/ops-copilot.svg)](https://pypi.org/project/ops-copilot/)
-[![Downloads](https://static.pepy.tech/badge/ops-copilot/month)](https://pepy.tech/project/ops-copilot)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.11%2B-blue.svg)](pyproject.toml)
 
@@ -122,6 +121,23 @@ Recommendations:
 
 Built-in redaction covers env-style secret lines, Bearer tokens, OpenAI-style keys, JWTs, long hex runs, and inline image data URLs.
 
+Shell tools also apply a conservative command policy. Obvious destructive commands such as `rm`, `dd`, `mkfs`, `shutdown`, `docker rm`, `docker prune`, and `systemctl restart` are blocked unless the YAML tool explicitly opts in with `policy.allow_destructive: true`. Use `dry_run: true` to review rendered commands without executing them.
+
+## Audit logs
+
+Use `JsonlAuditLog` to append redacted investigation events for incident review:
+
+```python
+from ops_copilot import InvestigationGraph, JsonlAuditLog
+
+graph = InvestigationGraph(
+    llm=your_langchain_chat_model,
+    tools=tools,
+    system_prompt="Investigate safely and cite evidence.",
+    audit_log=JsonlAuditLog("audit/investigation.jsonl"),
+)
+```
+
 ## Documentation and examples
 
 - `docs/security-model.md` documents threat boundaries and deployment controls.
@@ -131,16 +147,14 @@ Built-in redaction covers env-style secret lines, Bearer tokens, OpenAI-style ke
 - `docs/server.md` covers the optional FastAPI/SSE integration.
 - `docs/maintenance-workflows.md` describes maintainer workflows and review checklists.
 - `docs/toolpacks.md` documents reviewed example toolpacks.
+- `docs/incident-fixtures.md` documents fake incidents for demos and regression tests.
 - `examples/local_demo.py` runs without a real SSH host using fake outputs.
 - `examples/custom_tool.py` shows how to inject a custom `RemoteTool` class.
 
 ## Roadmap
 
-- Command allowlist validation for shell tools.
-- Built-in Docker and systemd tool packs.
 - Persistent investigation sessions.
-- Audit log export.
-- More fake incident fixtures for regression tests.
+- More incident fixture coverage for regression tests.
 
 ## Development
 
@@ -149,6 +163,7 @@ uv sync --dev
 uv run ruff check .
 uv run pytest
 uv run python scripts/smoke.py
+uv build
 ```
 
 ## License

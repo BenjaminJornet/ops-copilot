@@ -1,0 +1,16 @@
+name: high-cpu
+summary: A service is consuming unexpected CPU on a Linux host.
+question: Why is the API host CPU usage high?
+fake_outputs:
+  uptime: "load average: 4.91, 5.12, 4.87"
+  top_processes: |
+    PID USER  %CPU COMMAND
+    481 app   92.3 python worker.py
+    122 root   4.1 journald
+expected_evidence:
+  - load average above normal baseline
+  - worker.py process consuming most CPU
+safe_next_steps:
+  - inspect recent worker logs
+  - compare queue depth with normal traffic
+  - avoid restarting services until evidence is collected

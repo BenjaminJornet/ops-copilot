@@ -39,12 +39,14 @@ class InvestigationGraph:
         system_prompt: str,
         vision_format: str = "openai",
         sanitize_output: Callable[[str], str] = sanitize_agent_output,
+        audit_log: Any | None = None,
     ) -> None:
         if not system_prompt:
             raise ValueError("system_prompt is required")
         self._system_prompt = system_prompt
         self._vision_format = vision_format
         self._sanitize_output = sanitize_output
+        self._audit_log = audit_log
         self._tool_node = ToolNode(tools, handle_tool_errors=True)
         try:
             self._llm_with_tools = llm.bind_tools(tools) if tools else llm
@@ -101,6 +103,7 @@ class InvestigationGraph:
     ) -> dict[str, Any]:
         messages = self._build_messages(user_message, history=history, images=images)
         start = time.monotonic()
+        self._audit("investigation_started", {"message": user_message, "images": len(images or [])})
         final_state = await self._graph.ainvoke(
             {"messages": messages, "tools_used": [], "iteration": 0}
         )
@@ -109,11 +112,16 @@ class InvestigationGraph:
         for message in new_messages:
             if isinstance(message, AIMessage) and message.content:
                 message.content = self._sanitize_output(extract_text_content(message.content))
-        return {
+        result = {
             "messages": new_messages,
             "tools_used": final_state.get("tools_used", []),
             "duration": duration,
         }
+        self._audit(
+            "investigation_completed",
+            {"tools_used": result["tools_used"], "duration": result["duration"]},
+        )
+        return result
 
     async def stream(
         self,
@@ -151,6 +159,10 @@ class InvestigationGraph:
                             "step_id": step_id,
                         },
                     }
+                    self._audit(
+                        "tool_start",
+                        {"tool": tool_name, "input": event.get("data", {}).get("input", {})},
+                    )
                 elif event_name == "on_tool_end":
                     tool_name = event.get("name", "unknown")
                     call_id = event.get("run_id") or event.get("data", {}).get("id") or ""
@@ -167,10 +179,13 @@ class InvestigationGraph:
                             "step_id": step_id,
                         },
                     }
+                    self._audit("tool_end", {"tool": tool_name, "output": output})
         except Exception as exc:
             logger.error("stream_investigation_failed", exc_info=True)
+            self._audit("error", {"error": str(exc)})
             yield {"event": "error", "data": {"error": str(exc)}}
             return
+        self._audit("done", {})
         yield {"event": "done", "data": {}}
 
     def _build_messages(
@@ -189,3 +204,11 @@ class InvestigationGraph:
             )
         )
         return messages
+
+    def _audit(self, event: str, data: dict[str, Any]) -> None:
+        if not self._audit_log:
+            return
+        try:
+            self._audit_log.record(event, data)
+        except Exception:
+            logger.exception("audit_log_record_failed")

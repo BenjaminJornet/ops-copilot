@@ -1,0 +1,18 @@
+name: failing-systemd-service
+summary: A systemd service is failing repeatedly after a deploy.
+question: Why is the web service failing after deploy?
+fake_outputs:
+  systemd_status: |
+    web.service - Web API
+    Active: failed (Result: exit-code)
+    Main PID: 8842 (code=exited, status=1/FAILURE)
+  journalctl_service: |
+    web[8842]: missing required environment variable DATABASE_URL
+    systemd[1]: web.service: Failed with result 'exit-code'.
+expected_evidence:
+  - service failed with exit code 1
+  - journal shows missing DATABASE_URL
+safe_next_steps:
+  - verify deployment environment configuration
+  - check secret injection path
+  - restart only after configuration is fixed

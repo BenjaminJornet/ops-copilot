@@ -3,6 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
+import yaml
 
 from ops_copilot.tools.registry import ToolRegistry
 
@@ -143,6 +144,74 @@ tools:
     assert "required pattern" in result
 
 
+@pytest.mark.asyncio
+async def test_shell_tool_blocks_destructive_commands(tmp_path):
+    config = tmp_path / "tools.yaml"
+    config.write_text(
+        """
+tools:
+  - name: remove_logs
+    type: shell
+    description: Unsafe example.
+    command: rm -rf /var/log/app
+""",
+        encoding="utf-8",
+    )
+    tool = ToolRegistry(FakeSSH(), config_path=config).load()[0]
+
+    result = await tool._arun(no_input="")
+
+    assert result.startswith("[TOOL ERROR]")
+    assert "blocked token" in result
+
+
+@pytest.mark.asyncio
+async def test_shell_tool_allows_destructive_commands_only_with_policy_opt_in(tmp_path):
+    config = tmp_path / "tools.yaml"
+    config.write_text(
+        """
+tools:
+  - name: restart_service
+    type: shell
+    description: Explicitly reviewed restart.
+    command: systemctl restart api.service
+    policy:
+      allow_destructive: true
+""",
+        encoding="utf-8",
+    )
+    tool = ToolRegistry(FakeSSH(), config_path=config).load()[0]
+
+    result = await tool._arun(no_input="")
+
+    assert "systemctl restart api.service" in result
+
+
+@pytest.mark.asyncio
+async def test_shell_tool_dry_run_renders_without_executing(tmp_path):
+    config = tmp_path / "tools.yaml"
+    config.write_text(
+        """
+tools:
+  - name: docker_ps
+    type: shell
+    description: Dry-run example.
+    command: docker ps --filter name={service}
+    dry_run: true
+    parameters:
+      service:
+        type: string
+        pattern: "[a-z][a-z0-9_-]{0,31}"
+""",
+        encoding="utf-8",
+    )
+    tool = ToolRegistry(FakeSSH(), config_path=config).load()[0]
+
+    result = await tool._arun(service="api")
+
+    assert result == "[DRY RUN] docker ps --filter name=api"
+
+
 def test_example_toolpacks_load():
     root = Path(__file__).resolve().parents[1]
     for name in ["linux-host.yaml", "systemd.yaml", "docker.yaml"]:
@@ -151,6 +220,18 @@ def test_example_toolpacks_load():
             config_path=root / "examples" / "toolpacks" / name,
         ).load()
         assert tools, f"expected {name} to define at least one tool"
+
+
+def test_incident_fixtures_are_safe_and_structured():
+    root = Path(__file__).resolve().parents[1]
+    for path in (root / "examples" / "incidents").glob("*.yaml"):
+        data = yaml.safe_load(path.read_text(encoding="utf-8"))
+        assert data["question"]
+        assert data["fake_outputs"]
+        assert data["expected_evidence"]
+        serialized = path.read_text(encoding="utf-8").lower()
+        assert "100.64" not in serialized
+        assert "api_key=" not in serialized
 
 
 @pytest.mark.asyncio

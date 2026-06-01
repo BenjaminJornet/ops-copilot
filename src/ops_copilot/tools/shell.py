@@ -5,6 +5,7 @@ import string
 from typing import Any
 
 from ops_copilot.tools.base import RemoteTool, ToolResult
+from ops_copilot.tools.policy import CommandPolicy
 
 
 class ShellTool(RemoteTool):
@@ -17,6 +18,8 @@ class ShellTool(RemoteTool):
         self.description = self.meta.get("description", self.description)
         self.command = self.meta.get("command", "")
         self.timeout = self.meta.get("timeout")
+        self.dry_run = bool(self.meta.get("dry_run", False))
+        self.policy = CommandPolicy.from_meta(self.meta)
         if not self.command:
             raise ValueError("ShellTool requires a command in tool metadata")
 
@@ -24,6 +27,9 @@ class ShellTool(RemoteTool):
         try:
             self._validate_parameters(kwargs)
             command = self._render_command(kwargs)
+            self.policy.validate(command)
+            if self.dry_run:
+                return ToolResult(output=f"[DRY RUN] {command}")
             output = await self._run_cmd(command, timeout=self.timeout)
             if output.startswith("[ERROR]"):
                 return ToolResult(success=False, error=output)

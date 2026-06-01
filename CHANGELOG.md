@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Added shell command policy checks, dry-run support, audit logging, and incident fixtures.
+
 ## 0.1.3
 
 - Added reviewed Linux, systemd, and Docker example toolpacks.

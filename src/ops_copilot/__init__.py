@@ -1,3 +1,4 @@
+from .audit import JsonlAuditLog
 from .graph import InvestigationGraph
 from .secrets import redact_secrets
 from .ssh import SSHClient, SSHError
@@ -7,6 +8,7 @@ from .tools.shell import ShellTool
 
 __all__ = [
     "InvestigationGraph",
+    "JsonlAuditLog",
     "RemoteTool",
     "SSHClient",
     "SSHError",
