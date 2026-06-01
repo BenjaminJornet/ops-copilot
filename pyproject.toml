@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "ops-copilot"
-version = "0.1.4"
+version = "0.1.5"
 description = "Self-hosted SRE investigation copilot with YAML tools, SSH execution, SSE streaming, and secret redaction."
 readme = "README.md"
 requires-python = ">=3.11"
