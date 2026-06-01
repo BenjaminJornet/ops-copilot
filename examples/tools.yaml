@@ -1,0 +1,33 @@
+tools:
+  - name: uptime
+    type: shell
+    description: Show system uptime and load average.
+    command: uptime
+
+  - name: disk_usage
+    type: shell
+    description: Show filesystem usage in human-readable form.
+    command: df -h
+
+  - name: memory_usage
+    type: shell
+    description: Show memory usage in megabytes.
+    command: free -m
+
+  - name: docker_ps
+    type: shell
+    description: List running containers.
+    command: docker ps --format 'table {{{{.Names}}}}\t{{{{.Status}}}}\t{{{{.Ports}}}}'
+
+  - name: journalctl_service
+    type: shell
+    description: Show recent logs for a systemd service.
+    command: journalctl -u {service} --since '{since}' --no-pager
+    parameters:
+      service:
+        type: string
+        description: systemd service name
+      since:
+        type: string
+        required: false
+        default: "30 minutes ago"
