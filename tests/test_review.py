@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from pathlib import Path
 import subprocess
 
 from ops_copilot.tools.review import format_findings, review_toolpack
@@ -68,6 +69,10 @@ def test_replay_incident_script_runs():
 
 
 def test_orchestrated_demo_runs():
+    root = Path(__file__).resolve().parents[2]
+    if not (root / "ollama-orchestra").exists():
+        pytest.skip("ollama-orchestra repository is not checked out side-by-side")
+
     result = subprocess.run(
         ["uv", "run", "python", "examples/orchestrated_demo.py"],
         check=True,
