@@ -61,6 +61,15 @@ class ShellTool(RemoteTool):
             if pattern and re.fullmatch(str(pattern), text) is None:
                 raise ValueError(f"Parameter {name!r} does not match the required pattern")
 
+            if allowed_values is None and not pattern:
+                # Secure by default: restrict unvalidated string parameters
+                safe_pattern = r"^[a-zA-Z0-9_\-\.\/\s\:\@\=\+]*$"
+                if re.fullmatch(safe_pattern, text) is None:
+                    raise ValueError(
+                        f"Parameter {name!r} contains forbidden shell characters. "
+                        "Define an explicit 'pattern' in YAML to override this safety constraint."
+                    )
+
     def _render_command(self, values: dict[str, Any]) -> str:
         formatter = string.Formatter()
         names = [field_name for _, field_name, _, _ in formatter.parse(self.command) if field_name]

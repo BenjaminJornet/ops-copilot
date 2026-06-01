@@ -15,7 +15,7 @@
 - Do not add secrets, private IPs, customer names, or real hostnames.
 - Do not add destructive shell commands unless `policy.allow_destructive: true` is explicitly justified and tested.
 - Prefer `dry_run: true` for examples that demonstrate command rendering.
-- Every parameter interpolated into a command should define `allowed_values` or `pattern` when possible.
+- Every parameter interpolated into a command should define `allowed_values` or `pattern` when possible. If both are omitted, a secure-by-default safe pattern will restrict input to safe alphanumerics and basic punctuation to block shell injection.
 - Audit logs and streamed events must redact sensitive values before leaving the tool boundary.
 
 ## Review Checklist

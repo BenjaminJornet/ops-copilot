@@ -1,6 +1,9 @@
 from __future__ import annotations
 
 import subprocess
+from pathlib import Path
+
+import pytest
 
 from ops_copilot.tools.review import format_findings, review_toolpack
 
@@ -65,3 +68,21 @@ def test_replay_incident_script_runs():
 
     assert "incident=disk-full" in result.stdout
     assert "root filesystem at 97 percent" in result.stdout
+
+
+def test_orchestrated_demo_runs():
+    root = Path(__file__).resolve().parents[2]
+    if not (root / "ollama-orchestra").exists():
+        pytest.skip("ollama-orchestra repository is not checked out side-by-side")
+
+    result = subprocess.run(
+        ["uv", "run", "python", "examples/orchestrated_demo.py"],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+
+    assert "Starting Coordinated Local Investigation" in result.stdout
+    assert "Orchestrated Events Emitted" in result.stdout
+    assert "semaphore_acquired" in result.stdout
+    assert "endpoint_score_updated" in result.stdout

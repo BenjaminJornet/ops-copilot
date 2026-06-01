@@ -145,6 +145,38 @@ tools:
 
 
 @pytest.mark.asyncio
+async def test_shell_tool_blocks_injection_by_default(tmp_path):
+    config = tmp_path / "tools.yaml"
+    config.write_text(
+        """
+tools:
+  - name: show_service
+    type: shell
+    description: Show service.
+    command: journalctl -u {service}
+    parameters:
+      service:
+        type: string
+""",
+        encoding="utf-8",
+    )
+    tool = ToolRegistry(FakeSSH(), config_path=config).load()[0]
+
+    # Safe inputs are allowed
+    assert "journalctl -u api-service" in await tool._arun(service="api-service")
+    assert "journalctl -u api:80" in await tool._arun(service="api:80")
+
+    # Shell injection attempts are blocked by default
+    result = await tool._arun(service="api; cat /etc/passwd")
+    assert result.startswith("[TOOL ERROR]")
+    assert "forbidden shell characters" in result
+
+    result2 = await tool._arun(service="api && whoami")
+    assert result2.startswith("[TOOL ERROR]")
+    assert "forbidden shell characters" in result2
+
+
+@pytest.mark.asyncio
 async def test_shell_tool_blocks_destructive_commands(tmp_path):
     config = tmp_path / "tools.yaml"
     config.write_text(

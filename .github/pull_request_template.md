@@ -3,8 +3,7 @@
 ## Safety checklist
 
 - [ ] Added or updated tests.
-- [ ] `uv run ruff check .` passes.
-- [ ] `uv run pytest` passes.
+- [ ] `bash scripts/validate-release.sh` passes successfully.
 - [ ] No real hostnames, private IPs, credentials, tokens, or internal service names were added.
 - [ ] Tool output is redacted before it reaches the LLM or SSE stream.
 - [ ] New shell commands are narrow, documented, and non-destructive.

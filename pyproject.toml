@@ -52,6 +52,7 @@ dev = [
     "ruff>=0.8",
     "fastapi>=0.115",
     "sse-starlette>=2",
+    "pybreaker>=1.2",
 ]
 
 [tool.hatch.build.targets.wheel]

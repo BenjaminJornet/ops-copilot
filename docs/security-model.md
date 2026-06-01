@@ -67,3 +67,11 @@ command: "{arbitrary_shell}"
 ```
 
 The second form gives the LLM too much control over the shell.
+
+## Parameter validation & shell injection prevention
+
+All string parameters in YAML tools are validated. If a parameter defines neither a custom regex `pattern` nor a list of `allowed_values`, it is validated against a conservative default pattern that permits only safe characters: letters, numbers, spaces, and minor SRE characters such as `-`, `_`, `.`, `/`, `:`, `@`, `=`, and `+`.
+
+Any parameter input containing characters like `;`, `&`, `|`, `<`, `>`, `$()`, or backticks is rejected by default to prevent shell injection, even if the developer forgot to define validation constraints.
+
+If a tool requires metacharacters (e.g. for complex log filtering), the developer must explicitly define a custom `pattern` in the YAML definition to bypass the default constraint. This ensures the system remains **Secure by Default**.
