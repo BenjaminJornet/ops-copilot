@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Added reviewed Linux, systemd, and Docker example toolpacks.
+- Added toolpack documentation and tests.
+- Added FastAPI JSON and SSE server smoke tests.
+
 ## 0.1.2
 
 - Added maintainer documentation, security policy, release process, and issue/PR templates.

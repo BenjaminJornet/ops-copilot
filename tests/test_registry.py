@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 import pytest
 
 from ops_copilot.tools.registry import ToolRegistry
@@ -139,3 +141,27 @@ tools:
     result = await tool._arun(service="../../etc/passwd")
     assert result.startswith("[TOOL ERROR]")
     assert "required pattern" in result
+
+
+def test_example_toolpacks_load():
+    root = Path(__file__).resolve().parents[1]
+    for name in ["linux-host.yaml", "systemd.yaml", "docker.yaml"]:
+        tools = ToolRegistry(
+            FakeSSH(),
+            config_path=root / "examples" / "toolpacks" / name,
+        ).load()
+        assert tools, f"expected {name} to define at least one tool"
+
+
+@pytest.mark.asyncio
+async def test_systemd_toolpack_rejects_unsafe_service_name():
+    root = Path(__file__).resolve().parents[1]
+    tools = ToolRegistry(
+        FakeSSH(),
+        config_path=root / "examples" / "toolpacks" / "systemd.yaml",
+    ).load()
+    status_tool = next(tool for tool in tools if tool.name == "systemd_status")
+
+    result = await status_tool._arun(service="../../etc/passwd")
+
+    assert result.startswith("[TOOL ERROR]")

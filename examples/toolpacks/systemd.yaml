@@ -1,0 +1,23 @@
+tools:
+  - name: systemd_status
+    type: shell
+    description: Show status for an allowed systemd service.
+    command: systemctl status {service} --no-pager
+    parameters:
+      service:
+        type: string
+        pattern: "[a-zA-Z0-9_.@-]{1,80}"
+
+  - name: systemd_recent_logs
+    type: shell
+    description: Show recent logs for an allowed systemd service.
+    command: journalctl -u {service} --since '{since}' --no-pager
+    parameters:
+      service:
+        type: string
+        pattern: "[a-zA-Z0-9_.@-]{1,80}"
+      since:
+        type: string
+        required: false
+        default: "30 minutes ago"
+        pattern: "[0-9]+ (minutes|hours|days) ago"

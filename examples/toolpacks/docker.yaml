@@ -1,0 +1,23 @@
+tools:
+  - name: docker_ps
+    type: shell
+    description: List running containers.
+    command: docker ps --format 'table {{{{.Names}}}}\t{{{{.Status}}}}\t{{{{.Ports}}}}'
+
+  - name: docker_stats_once
+    type: shell
+    description: Capture one Docker stats sample without streaming.
+    command: docker stats --no-stream --format 'table {{{{.Name}}}}\t{{{{.CPUPerc}}}}\t{{{{.MemUsage}}}}'
+
+  - name: docker_logs
+    type: shell
+    description: Show recent logs for a container with a safe name.
+    command: docker logs --tail {lines} {container}
+    parameters:
+      container:
+        type: string
+        pattern: "[a-zA-Z0-9_.-]{1,80}"
+      lines:
+        type: integer
+        required: false
+        default: 100
