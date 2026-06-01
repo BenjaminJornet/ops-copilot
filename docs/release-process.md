@@ -2,15 +2,15 @@
 
 ## Checklist
 
-1. Run `uv run ruff check .`.
-2. Run `uv run pytest`.
-3. Run `uv build`.
-4. Run `examples/local_demo.py`.
-5. Scan source and docs for hostnames, private IPs, credentials, and client-specific names.
-6. Update `CHANGELOG.md`.
-7. Tag the release.
-8. Create a GitHub release.
-9. Publish through the manual `Publish to PyPI` workflow.
+1. Merge feature PRs to `main` after CI, build, and smoke checks pass.
+2. Run `python scripts/prepare-release.py X.Y.Z`.
+3. Review `git diff` and commit the release prep.
+4. Push `main` and wait for CI, build, and smoke checks to pass.
+5. Run `bash scripts/create-release.sh X.Y.Z`.
+6. Confirm the `Publish to PyPI` workflow succeeds.
+7. Run `bash scripts/run-pypi-install-check.sh`.
+8. Run `uv run python examples/local_demo.py` when changing investigation behavior.
+9. Scan source and docs for hostnames, private IPs, credentials, and client-specific names.
 
 ## Local development with sibling packages
 
