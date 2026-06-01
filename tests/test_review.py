@@ -1,7 +1,9 @@
 from __future__ import annotations
 
-from pathlib import Path
 import subprocess
+from pathlib import Path
+
+import pytest
 
 from ops_copilot.tools.review import format_findings, review_toolpack
 
