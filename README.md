@@ -10,6 +10,19 @@ Self-hosted SRE investigation copilot for production systems.
 
 `ops-copilot` lets an LLM call tools defined in YAML, execute safe remote commands over SSH, redact secrets from outputs, and stream investigation events through LangGraph or an optional FastAPI SSE server.
 
+## Who this is for
+
+- SREs and platform engineers running self-hosted infrastructure.
+- Open source maintainers operating docs, bots, CI runners, demos, or package services.
+- Teams that want reviewed operational tools instead of free-form shell access.
+- Developers building incident-investigation UIs around LangGraph or LangChain.
+
+## Maintenance workflows
+
+This repository is maintained with CI, build checks, smoke tests, release workflows, Dependabot, issue templates, PR checklists, a security model, and PyPI releases.
+
+Typical maintainer tasks include reviewing YAML tools, triaging operational edge cases, adding tests for sanitizer and command-rendering behavior, and preparing safe releases.
+
 ## Architecture
 
 ```text
@@ -112,6 +125,8 @@ Built-in redaction covers env-style secret lines, Bearer tokens, OpenAI-style ke
 ## Documentation and examples
 
 - `docs/security-model.md` documents threat boundaries and deployment controls.
+- `docs/why-ops-copilot.md` explains the project scope and ecosystem need.
+- `docs/demo.md` shows a local demo that runs without real SSH credentials.
 - `docs/writing-tools.md` explains YAML and custom Python tools.
 - `docs/server.md` covers the optional FastAPI/SSE integration.
 - `docs/maintenance-workflows.md` describes maintainer workflows and review checklists.

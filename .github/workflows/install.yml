@@ -1,0 +1,28 @@
+name: Install from PyPI
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "20 8 * * 1"
+
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install published package
+        run: python -m pip install ops-copilot
+      - name: Import and smoke published package
+        run: |
+          python - <<'PY'
+          from ops_copilot import ToolResult, redact_secrets
+          assert ToolResult(output="ok").output == "ok"
+          assert "secret" not in redact_secrets("API_KEY=secret")
+          print("published package import ok")
+          PY
