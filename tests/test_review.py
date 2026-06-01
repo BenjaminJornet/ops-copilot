@@ -65,3 +65,17 @@ def test_replay_incident_script_runs():
 
     assert "incident=disk-full" in result.stdout
     assert "root filesystem at 97 percent" in result.stdout
+
+
+def test_orchestrated_demo_runs():
+    result = subprocess.run(
+        ["uv", "run", "python", "examples/orchestrated_demo.py"],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+
+    assert "Starting Coordinated Local Investigation" in result.stdout
+    assert "Orchestrated Events Emitted" in result.stdout
+    assert "semaphore_acquired" in result.stdout
+    assert "endpoint_score_updated" in result.stdout
