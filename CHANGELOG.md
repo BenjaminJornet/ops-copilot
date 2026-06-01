@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Added maintainer documentation, security policy, release process, and issue/PR templates.
+- Added security model, tool-writing, server, and maintenance-workflow documentation.
+- Added local demo and custom tool examples.
+- Added build and manual publish workflows.
+
 ## 0.1.0
 
 Initial public release.

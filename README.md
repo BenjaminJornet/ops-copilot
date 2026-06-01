@@ -130,6 +130,7 @@ Built-in redaction covers env-style secret lines, Bearer tokens, OpenAI-style ke
 uv sync --dev
 uv run ruff check .
 uv run pytest
+uv run python scripts/smoke.py
 ```
 
 ## License
