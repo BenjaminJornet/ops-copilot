@@ -14,6 +14,7 @@ It uses:
 ```bash
 uv sync --dev
 uv run python examples/local_demo.py
+uv run python examples/replay_incident.py examples/incidents/disk-full.yaml
 ```
 
 Expected output shape:
@@ -41,6 +42,7 @@ smoke ok
 
 - YAML tools can be loaded into the registry.
 - The investigation graph can run without external services.
+- Incident fixtures can be replayed without SSH credentials.
 - Stream events are shaped consistently.
 - Redaction and sanitization paths are importable in a clean environment.
 
