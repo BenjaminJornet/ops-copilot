@@ -1,5 +1,9 @@
 # ops-copilot
 
+[![CI](https://github.com/BenjaminJornet/ops-copilot/actions/workflows/ci.yml/badge.svg)](https://github.com/BenjaminJornet/ops-copilot/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Python](https://img.shields.io/badge/python-3.11%2B-blue.svg)](pyproject.toml)
+
 Self-hosted SRE investigation copilot for production systems.
 
 `ops-copilot` lets an LLM call tools defined in YAML, execute safe remote commands over SSH, redact secrets from outputs, and stream investigation events through LangGraph or an optional FastAPI SSE server.
@@ -102,6 +106,23 @@ Recommendations:
 - Rely on built-in redaction as a safety net, not as your only control.
 
 Built-in redaction covers env-style secret lines, Bearer tokens, OpenAI-style keys, JWTs, long hex runs, and inline image data URLs.
+
+## Documentation and examples
+
+- `docs/security-model.md` documents threat boundaries and deployment controls.
+- `docs/writing-tools.md` explains YAML and custom Python tools.
+- `docs/server.md` covers the optional FastAPI/SSE integration.
+- `docs/maintenance-workflows.md` describes maintainer workflows and review checklists.
+- `examples/local_demo.py` runs without a real SSH host using fake outputs.
+- `examples/custom_tool.py` shows how to inject a custom `RemoteTool` class.
+
+## Roadmap
+
+- Command allowlist validation for shell tools.
+- Built-in Docker and systemd tool packs.
+- Persistent investigation sessions.
+- Audit log export.
+- More fake incident fixtures for regression tests.
 
 ## Development
 

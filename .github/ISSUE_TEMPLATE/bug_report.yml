@@ -1,0 +1,30 @@
+name: Bug report
+description: Report an investigation, tool execution, SSH, or streaming issue.
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: textarea
+    id: scenario
+    attributes:
+      label: Scenario
+      description: What were you trying to investigate?
+    validations:
+      required: true
+  - type: textarea
+    id: tool_config
+    attributes:
+      label: Tool configuration
+      description: Paste a minimal redacted YAML snippet if relevant.
+      render: yaml
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true

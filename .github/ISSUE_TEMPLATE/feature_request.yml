@@ -1,0 +1,23 @@
+name: Feature request
+description: Suggest a new SRE workflow, tool type, or safety control.
+title: "[Feature]: "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: workflow
+    attributes:
+      label: Workflow
+      description: Which maintenance or incident workflow would this improve?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+    validations:
+      required: true
+  - type: textarea
+    id: safety
+    attributes:
+      label: Safety considerations
+      description: Any command, SSH, secret, or permission risks?
