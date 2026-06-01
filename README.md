@@ -130,6 +130,7 @@ Built-in redaction covers env-style secret lines, Bearer tokens, OpenAI-style ke
 - `docs/writing-tools.md` explains YAML and custom Python tools.
 - `docs/server.md` covers the optional FastAPI/SSE integration.
 - `docs/maintenance-workflows.md` describes maintainer workflows and review checklists.
+- `docs/toolpacks.md` documents reviewed example toolpacks.
 - `examples/local_demo.py` runs without a real SSH host using fake outputs.
 - `examples/custom_tool.py` shows how to inject a custom `RemoteTool` class.
 

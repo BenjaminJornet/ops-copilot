@@ -1238,9 +1238,12 @@ server = [
 
 [package.dev-dependencies]
 dev = [
+    { name = "fastapi" },
+    { name = "httpx" },
     { name = "pytest" },
     { name = "pytest-asyncio" },
     { name = "ruff" },
+    { name = "sse-starlette" },
 ]
 
 [package.metadata]
@@ -1261,9 +1264,12 @@ provides-extras = ["openai", "ollama", "server"]
 
 [package.metadata.requires-dev]
 dev = [
+    { name = "fastapi", specifier = ">=0.115" },
+    { name = "httpx", specifier = ">=0.27" },
     { name = "pytest", specifier = ">=8.0" },
     { name = "pytest-asyncio", specifier = ">=0.24" },
     { name = "ruff", specifier = ">=0.8" },
+    { name = "sse-starlette", specifier = ">=2" },
 ]
 
 [[package]]

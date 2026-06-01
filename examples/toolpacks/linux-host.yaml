@@ -1,0 +1,20 @@
+tools:
+  - name: uptime
+    type: shell
+    description: Show system uptime and load average.
+    command: uptime
+
+  - name: disk_usage
+    type: shell
+    description: Show filesystem usage in human-readable form.
+    command: df -h
+
+  - name: memory_usage
+    type: shell
+    description: Show memory usage in megabytes.
+    command: free -m
+
+  - name: process_snapshot
+    type: shell
+    description: Show top CPU-consuming processes.
+    command: ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%cpu | head -25
