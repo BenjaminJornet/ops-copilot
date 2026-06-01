@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.1.4
+
 - Added shell command policy checks, dry-run support, audit logging, and incident fixtures.
 
 ## 0.1.3
