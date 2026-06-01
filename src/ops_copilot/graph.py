@@ -17,6 +17,7 @@ from lc_content_normalizer import (
 )
 from typing_extensions import TypedDict
 
+from ops_copilot.report import IncidentReport
 from ops_copilot.sanitizers import sanitize_agent_output
 
 logger = logging.getLogger(__name__)
@@ -117,11 +118,28 @@ class InvestigationGraph:
             "tools_used": final_state.get("tools_used", []),
             "duration": duration,
         }
+        result["report"] = self._build_report(result)
         self._audit(
             "investigation_completed",
             {"tools_used": result["tools_used"], "duration": result["duration"]},
         )
         return result
+
+    def _build_report(self, result: dict[str, Any]) -> IncidentReport:
+        text_messages = [
+            self._sanitize_output(extract_text_content(getattr(message, "content", "")))
+            for message in result.get("messages", [])
+            if extract_text_content(getattr(message, "content", ""))
+        ]
+        summary = text_messages[-1] if text_messages else "Investigation completed."
+        evidence = [message for message in text_messages if message != summary]
+        return IncidentReport(
+            summary=summary,
+            evidence=evidence,
+            next_steps=[],
+            tools_used=list(result.get("tools_used", [])),
+            duration=float(result.get("duration", 0.0)),
+        )
 
     async def stream(
         self,

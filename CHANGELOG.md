@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Added fixture replay demo, Codex maintenance guide, toolpack review, structured incident reports, and in-memory sessions.
+
 ## 0.1.4
 
 - Added shell command policy checks, dry-run support, audit logging, and incident fixtures.

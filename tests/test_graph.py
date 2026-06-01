@@ -33,6 +33,7 @@ async def test_graph_run_returns_final_message_without_tools():
 
     assert result["tools_used"] == []
     assert result["messages"][0].content == "done"
+    assert result["report"].summary == "done"
 
 
 @pytest.mark.asyncio

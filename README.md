@@ -143,12 +143,14 @@ graph = InvestigationGraph(
 - `docs/security-model.md` documents threat boundaries and deployment controls.
 - `docs/why-ops-copilot.md` explains the project scope and ecosystem need.
 - `docs/demo.md` shows a local demo that runs without real SSH credentials.
+- `docs/codex-maintenance.md` documents safe Codex-style maintenance workflows.
 - `docs/writing-tools.md` explains YAML and custom Python tools.
 - `docs/server.md` covers the optional FastAPI/SSE integration.
 - `docs/maintenance-workflows.md` describes maintainer workflows and review checklists.
 - `docs/toolpacks.md` documents reviewed example toolpacks.
 - `docs/incident-fixtures.md` documents fake incidents for demos and regression tests.
 - `examples/local_demo.py` runs without a real SSH host using fake outputs.
+- `examples/replay_incident.py` replays fake incident fixtures for demos.
 - `examples/custom_tool.py` shows how to inject a custom `RemoteTool` class.
 
 ## Roadmap

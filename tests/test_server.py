@@ -8,18 +8,30 @@ from ops_copilot.server import create_app
 
 
 class FakeGraph:
-    async def run(self, message: str, *, images=None):
+    async def run(self, message: str, *, history=None, images=None):
         assert message == "check host"
         return {
             "messages": [AIMessage(content="host looks healthy")],
             "tools_used": ["uptime"],
             "duration": 0.1,
+            "report": FakeReport(),
         }
 
-    async def stream(self, message: str, *, images=None):
+    async def stream(self, message: str, *, history=None, images=None):
         assert message == "check host"
         yield {"event": "token", "data": "host looks healthy"}
         yield {"event": "done", "data": {}}
+
+
+class FakeReport:
+    def model_dump(self):
+        return {
+            "summary": "host looks healthy",
+            "evidence": [],
+            "next_steps": [],
+            "tools_used": ["uptime"],
+            "duration": 0.1,
+        }
 
 
 def test_investigate_endpoint_returns_result(monkeypatch):
@@ -32,6 +44,7 @@ def test_investigate_endpoint_returns_result(monkeypatch):
     assert response.status_code == 200
     assert response.json()["messages"] == ["host looks healthy"]
     assert response.json()["tools_used"] == ["uptime"]
+    assert response.json()["report"]["summary"] == "host looks healthy"
 
 
 def test_investigate_endpoint_enforces_api_key(monkeypatch):
