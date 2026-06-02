@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## 0.1.9
+
+- Added a `slow-api` incident fixture with replay CLI coverage.
+- Added per-tool `timeout_seconds` and `max_output_chars` limits for shell tools.
+- Documented shell tool execution limits in writing and security docs.
+
 ## 0.1.8
 
 - Replaced platform-specific repository documentation with agent-agnostic maintenance guidance.
