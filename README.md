@@ -13,6 +13,8 @@ It is built for maintainers who want reviewed operational tools, not arbitrary s
 
 ## 30-second demo
 
+![ops-copilot terminal demo](docs/assets/terminal-demo.svg)
+
 From a checkout, run a local incident replay, review a toolpack, and exercise the three-package demo without SSH credentials or API keys:
 
 ```bash
@@ -185,7 +187,8 @@ graph = InvestigationGraph(
 - `docs/threat-model.md` documents STRIDE-style risks and mitigations.
 - `docs/why-ops-copilot.md` explains the project scope and ecosystem need.
 - `docs/demo.md` shows a local demo that runs without real SSH credentials.
-- `docs/codex-maintenance.md` documents safe Codex-style maintenance workflows.
+- `docs/agent-maintenance.md` documents safe AI-assisted maintenance workflows.
+- `docs/architecture.md` documents the current data flow.
 - `docs/writing-tools.md` explains YAML and custom Python tools.
 - `docs/server.md` covers the optional FastAPI/SSE integration.
 - `docs/maintenance-workflows.md` describes maintainer workflows and review checklists.

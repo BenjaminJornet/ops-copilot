@@ -2,7 +2,7 @@
 
 `ops-copilot` is designed to be maintained with the same workflows it supports: structured investigation, explicit tools, safety review, and repeatable releases.
 
-## Codex-assisted maintenance use cases
+## AI-assisted maintenance use cases
 
 - Review pull requests that add YAML tools or custom `RemoteTool` classes.
 - Generate edge-case tests for command rendering and redaction.
