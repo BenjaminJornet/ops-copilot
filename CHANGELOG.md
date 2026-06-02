@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## 0.1.7
+
+- Added packaged `ops-copilot review` and `ops-copilot replay` maintainer commands.
+- Added ecosystem smoke workflow for the three-repository local demo.
+- Added STRIDE-style threat model documentation and sharper README demo/safety sections.
+- Added `httpx2` for Starlette TestClient and made pytest warnings fail by default, with a targeted upstream LangChain Python 3.14 exception.
+
 ## 0.1.6
 
 ## 0.1.5
