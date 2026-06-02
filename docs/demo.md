@@ -14,7 +14,8 @@ It uses:
 ```bash
 uv sync --dev
 uv run python examples/local_demo.py
-uv run python examples/replay_incident.py examples/incidents/disk-full.yaml
+uv run ops-copilot replay examples/incidents/disk-full.yaml
+uv run ops-copilot review examples/toolpacks/systemd.yaml
 ```
 
 Expected output shape:
@@ -25,6 +26,20 @@ Expected output shape:
 ```
 
 The exact token event can vary by model implementation, but the demo should finish with a `done` event.
+
+## Recorded terminal demo
+
+The repository includes a recorded asciinema demo:
+
+```bash
+uvx asciinema play docs/assets/ops-copilot-demo.cast
+```
+
+To re-record it locally:
+
+```bash
+uvx asciinema rec docs/assets/ops-copilot-demo.cast --overwrite --command "bash scripts/record_demo.sh"
+```
 
 ## Run the smoke script
 

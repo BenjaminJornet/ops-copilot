@@ -1,0 +1,25 @@
+name: bad-env-var
+summary: A service is failing because a required environment variable is missing.
+question: Why did the API service start returning errors after deploy?
+fake_outputs:
+  service_status: |
+    api.service - Example API
+    Loaded: loaded (/etc/systemd/system/api.service; enabled)
+    Active: active (running)
+    Main PID: 4242 (python)
+  recent_logs: |
+    ERROR config validation failed: DATABASE_URL is not set
+    ERROR startup aborted before serving requests
+    INFO rollback candidate: previous release had DATABASE_URL configured
+  env_check: |
+    DATABASE_URL=<missing>
+    API_MODE=production
+    LOG_LEVEL=info
+expected_evidence:
+  - DATABASE_URL is missing from the service environment
+  - startup failed before serving requests
+  - previous release had the required variable configured
+safe_next_steps:
+  - compare the current environment file with the previous release
+  - restore the missing DATABASE_URL through the normal secrets manager
+  - restart only the affected service after review
