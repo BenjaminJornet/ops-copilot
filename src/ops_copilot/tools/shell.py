@@ -17,7 +17,8 @@ class ShellTool(RemoteTool):
         self.name = self.meta.get("name", self.name)
         self.description = self.meta.get("description", self.description)
         self.command = self.meta.get("command", "")
-        self.timeout = self.meta.get("timeout")
+        self.timeout = self._positive_int_meta("timeout_seconds", fallback_key="timeout")
+        self.max_output_chars = self._positive_int_meta("max_output_chars")
         self.dry_run = bool(self.meta.get("dry_run", False))
         self.policy = CommandPolicy.from_meta(self.meta)
         if not self.command:
@@ -33,7 +34,7 @@ class ShellTool(RemoteTool):
             output = await self._run_cmd(command, timeout=self.timeout)
             if output.startswith("[ERROR]"):
                 return ToolResult(success=False, error=output)
-            return ToolResult(output=output)
+            return ToolResult(output=self._limit_output(output))
         except KeyError as exc:
             return ToolResult(success=False, error=f"Missing command parameter: {exc.args[0]}")
         except ValueError as exc:
@@ -77,3 +78,28 @@ class ShellTool(RemoteTool):
         if missing:
             raise KeyError(missing[0])
         return self.command.format(**values)
+
+    def _limit_output(self, output: str) -> str:
+        if self.max_output_chars is None or len(output) <= self.max_output_chars:
+            return output
+        omitted = len(output) - self.max_output_chars
+        return output[: self.max_output_chars] + f"\n\n[...truncated {omitted} chars]"
+
+    def _positive_int_meta(
+        self,
+        key: str,
+        *,
+        fallback_key: str | None = None,
+    ) -> int | None:
+        value = self.meta.get(key)
+        if value is None and fallback_key:
+            value = self.meta.get(fallback_key)
+        if value is None:
+            return None
+        try:
+            parsed = int(value)
+        except (TypeError, ValueError) as exc:
+            raise ValueError(f"{key} must be a positive integer") from exc
+        if parsed <= 0:
+            raise ValueError(f"{key} must be a positive integer")
+        return parsed
