@@ -38,4 +38,4 @@ reviewed YAML tools + typed parameters + SSH execution + redacted output + strea
 
 Many maintainers operate small production services around their projects: docs, package registries, bots, CI runners, demo apps, or self-hosted infra.
 
-`ops-copilot` aims to make that operational work more repeatable while keeping tool definitions visible for review. Codex-style workflows can help maintainers review YAML tools, add edge-case tests, triage issues, and prepare safe releases.
+`ops-copilot` aims to make that operational work more repeatable while keeping tool definitions visible for review. AI-assisted workflows can help maintainers review YAML tools, add edge-case tests, triage issues, and prepare safe releases without tying the project to one agent platform.

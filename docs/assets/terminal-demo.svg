@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="520" viewBox="0 0 960 520" role="img" aria-labelledby="title desc">
+  <title id="title">ops-copilot terminal demo</title>
+  <desc id="desc">Terminal-style demo showing incident replay, toolpack review, and orchestrated investigation output.</desc>
+  <rect width="960" height="520" rx="18" fill="#0b1020"/>
+  <rect x="18" y="18" width="924" height="486" rx="14" fill="#111827" stroke="#334155"/>
+  <circle cx="44" cy="42" r="7" fill="#ef4444"/>
+  <circle cx="68" cy="42" r="7" fill="#f59e0b"/>
+  <circle cx="92" cy="42" r="7" fill="#22c55e"/>
+  <text x="122" y="48" fill="#94a3b8" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="15">ops-copilot local demo</text>
+
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="18">
+    <text x="38" y="92" fill="#22c55e">$</text>
+    <text x="62" y="92" fill="#e5e7eb">uv run ops-copilot replay examples/incidents/disk-full.yaml</text>
+    <text x="62" y="126" fill="#93c5fd">incident=disk-full</text>
+    <text x="62" y="154" fill="#cbd5e1">question='Why is the host unhealthy?'</text>
+    <text x="62" y="182" fill="#cbd5e1">expected_evidence: root filesystem at 97 percent</text>
+    <text x="62" y="210" fill="#cbd5e1">safe_next_steps: inspect large logs before deleting anything</text>
+
+    <text x="38" y="258" fill="#22c55e">$</text>
+    <text x="62" y="258" fill="#e5e7eb">uv run ops-copilot review examples/toolpacks/systemd.yaml</text>
+    <text x="62" y="292" fill="#86efac">toolpack_review status=ok</text>
+
+    <text x="38" y="340" fill="#22c55e">$</text>
+    <text x="62" y="340" fill="#e5e7eb">uv run python examples/orchestrated_demo.py</text>
+    <text x="62" y="374" fill="#facc15">==&gt; Starting Coordinated Local Investigation...</text>
+    <text x="62" y="402" fill="#cbd5e1">event=semaphore_created url=http://localhost:11434</text>
+    <text x="62" y="430" fill="#cbd5e1">event=semaphore_acquired url=http://localhost:11434</text>
+    <text x="62" y="458" fill="#cbd5e1">event=endpoint_score_updated score=0.899</text>
+    <text x="62" y="486" fill="#86efac">event=chat_success</text>
+  </g>
+</svg>

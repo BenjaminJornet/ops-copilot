@@ -1,14 +1,14 @@
-# Codex Maintenance Workflows
+# Agent Maintenance Workflows
 
-`ops-copilot` is designed to be maintained through small, reviewable changes. Codex-style agents are useful when they preserve the safety model and produce tests with every tool or incident update.
+`ops-copilot` is designed to be maintained through small, reviewable changes. AI coding assistants are useful when they preserve the safety model and produce tests with every tool or incident update.
 
-## Good Codex Tasks
+## Good Agent Tasks
 
 - Add a new reviewed YAML toolpack with parameter validation.
 - Add or expand an incident fixture in `examples/incidents/`.
 - Add regression tests for sanitizer, command rendering, SSE events, and audit logs.
 - Draft release notes from merged PRs and run release scripts.
-- Review toolpacks with `python -m ops_copilot.tools.review <path>`.
+- Review toolpacks with `ops-copilot review <path>`.
 
 ## Safety Rules
 
@@ -21,6 +21,6 @@
 ## Review Checklist
 
 1. Run `bash scripts/validate-release.sh`.
-2. Run `python -m ops_copilot.tools.review examples/toolpacks/systemd.yaml`.
-3. Replay at least one incident fixture with `uv run python examples/replay_incident.py examples/incidents/disk-full.yaml`.
+2. Run `uv run ops-copilot review examples/toolpacks/systemd.yaml`.
+3. Replay at least one incident fixture with `uv run ops-copilot replay examples/incidents/disk-full.yaml`.
 4. Confirm the PR changes no secrets and no client-specific infrastructure names.

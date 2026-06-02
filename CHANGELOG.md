@@ -13,7 +13,7 @@
 
 ## 0.1.5
 
-- Added fixture replay demo, Codex maintenance guide, toolpack review, structured incident reports, and in-memory sessions.
+- Added fixture replay demo, agent maintenance guide, toolpack review, structured incident reports, and in-memory sessions.
 
 ## 0.1.4
 
