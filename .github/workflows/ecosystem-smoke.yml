@@ -1,0 +1,42 @@
+name: Ecosystem Smoke
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  ecosystem-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout ops-copilot
+        uses: actions/checkout@v4
+        with:
+          path: ops-copilot
+      - name: Checkout ollama-orchestra
+        uses: actions/checkout@v4
+        with:
+          repository: BenjaminJornet/ollama-orchestra
+          path: ollama-orchestra
+      - name: Checkout langchain-content-normalizer
+        uses: actions/checkout@v4
+        with:
+          repository: BenjaminJornet/langchain-content-normalizer
+          path: langchain-content-normalizer
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        working-directory: ops-copilot
+        run: uv sync --dev
+      - name: Run orchestrated demo
+        working-directory: ops-copilot
+        run: uv run python examples/orchestrated_demo.py

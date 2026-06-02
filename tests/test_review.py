@@ -70,6 +70,29 @@ def test_replay_incident_script_runs():
     assert "root filesystem at 97 percent" in result.stdout
 
 
+def test_packaged_cli_reviews_toolpack():
+    result = subprocess.run(
+        ["uv", "run", "ops-copilot", "review", "examples/toolpacks/systemd.yaml"],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+
+    assert result.stdout.strip() == "toolpack_review status=ok"
+
+
+def test_packaged_cli_replays_incident():
+    result = subprocess.run(
+        ["uv", "run", "ops-copilot", "replay", "examples/incidents/disk-full.yaml"],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+
+    assert "incident=disk-full" in result.stdout
+    assert "safe_next_steps:" in result.stdout
+
+
 def test_orchestrated_demo_runs():
     root = Path(__file__).resolve().parents[2]
     if not (root / "ollama-orchestra").exists():
