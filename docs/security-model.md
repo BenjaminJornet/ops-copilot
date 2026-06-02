@@ -27,6 +27,7 @@ The critical boundary is between the LLM-generated tool input and the command ex
 - Collapses large inline image data URLs.
 - Removes system reminder and image placeholder artifacts from prompts.
 - Emits structured stream events so UIs can distinguish tool starts, tool ends, errors, and model tokens.
+- Supports per-tool command timeouts and output-size limits for reviewed shell tools.
 
 ## What the project does not do
 
@@ -75,3 +76,9 @@ All string parameters in YAML tools are validated. If a parameter defines neithe
 Any parameter input containing characters like `;`, `&`, `|`, `<`, `>`, `$()`, or backticks is rejected by default to prevent shell injection, even if the developer forgot to define validation constraints.
 
 If a tool requires metacharacters (e.g. for complex log filtering), the developer must explicitly define a custom `pattern` in the YAML definition to bypass the default constraint. This ensures the system remains **Secure by Default**.
+
+## Per-tool execution limits
+
+Reviewed shell tools can define `timeout_seconds` and `max_output_chars` metadata. Timeouts reduce the chance that a slow command blocks an investigation indefinitely. Output limits reduce accidental prompt/log bloat and append a truncation marker when content is omitted.
+
+These controls are guardrails, not a sandbox. Operators should still keep SSH users least-privilege and prefer narrow, read-only commands.

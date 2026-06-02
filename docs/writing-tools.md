@@ -51,6 +51,26 @@ parameters:
 
 `ShellTool` rejects parameter values containing newlines, carriage returns, or null bytes. `allowed_values` and `pattern` add narrow validation before command rendering. These checks reduce accidental injection risk, but they do not make arbitrary shell templates safe.
 
+Per-tool execution limits keep reviewed tools bounded:
+
+```yaml
+tools:
+  - name: recent_logs
+    type: shell
+    description: Show recent service logs.
+    command: journalctl -u {service} --since '30 minutes ago' --no-pager
+    timeout_seconds: 10
+    max_output_chars: 20000
+    parameters:
+      service:
+        type: string
+        allowed_values: [api, worker]
+```
+
+- `timeout_seconds` overrides the SSH client's default command timeout for this tool.
+- `max_output_chars` truncates oversized output and appends a truncation marker.
+- Legacy `timeout` metadata is still accepted as an alias for `timeout_seconds`.
+
 ## Custom Python tools
 
 Custom tools subclass `RemoteTool` and return `ToolResult`.
@@ -84,6 +104,7 @@ registry = ToolRegistry(
 
 - Keep commands read-only when possible.
 - Prefer narrow parameters over free-form shell fragments.
+- Set `timeout_seconds` and `max_output_chars` for commands that can hang or produce large output.
 - Keep output concise and useful for diagnosis.
 - Return machine-readable evidence when possible.
 - Add a test for every new command template or custom tool.

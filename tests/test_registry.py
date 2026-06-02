@@ -9,8 +9,13 @@ from ops_copilot.tools.registry import ToolRegistry
 
 
 class FakeSSH:
+    def __init__(self, output: str | None = None) -> None:
+        self.output = output
+        self.calls: list[tuple[str, int | None]] = []
+
     async def run(self, command: str, timeout: int | None = None) -> str:
-        return f"ran: {command}"
+        self.calls.append((command, timeout))
+        return self.output if self.output is not None else f"ran: {command}"
 
 
 def test_registry_loads_shell_tools_from_yaml(tmp_path):
@@ -242,6 +247,68 @@ tools:
     result = await tool._arun(service="api")
 
     assert result == "[DRY RUN] docker ps --filter name=api"
+
+
+@pytest.mark.asyncio
+async def test_shell_tool_passes_timeout_seconds_to_ssh(tmp_path):
+    config = tmp_path / "tools.yaml"
+    config.write_text(
+        """
+tools:
+  - name: logs
+    type: shell
+    description: Logs.
+    command: journalctl -u api --no-pager
+    timeout_seconds: 7
+""",
+        encoding="utf-8",
+    )
+    ssh = FakeSSH()
+    tool = ToolRegistry(ssh, config_path=config).load()[0]
+
+    await tool._arun(no_input="")
+
+    assert ssh.calls == [("journalctl -u api --no-pager", 7)]
+
+
+@pytest.mark.asyncio
+async def test_shell_tool_limits_output_chars(tmp_path):
+    config = tmp_path / "tools.yaml"
+    config.write_text(
+        """
+tools:
+  - name: large_output
+    type: shell
+    description: Large output.
+    command: print-large-output
+    max_output_chars: 10
+""",
+        encoding="utf-8",
+    )
+    tool = ToolRegistry(FakeSSH(output="x" * 20), config_path=config).load()[0]
+
+    result = await tool._arun(no_input="")
+
+    assert result.startswith("x" * 10)
+    assert "truncated 10 chars" in result
+
+
+def test_shell_tool_rejects_invalid_limits(tmp_path):
+    config = tmp_path / "tools.yaml"
+    config.write_text(
+        """
+tools:
+  - name: bad_limit
+    type: shell
+    description: Bad limit.
+    command: uptime
+    max_output_chars: 0
+""",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="max_output_chars must be a positive integer"):
+        ToolRegistry(FakeSSH(), config_path=config).load()
 
 
 def test_example_toolpacks_load():
