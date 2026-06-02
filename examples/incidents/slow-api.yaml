@@ -1,0 +1,18 @@
+name: slow-api
+summary: API latency is elevated even though the service is still serving traffic.
+question: Why are API requests taking much longer than normal?
+fake_outputs:
+  latency_summary: |
+    route=/v1/search p50=180ms p95=2.8s p99=4.6s error_rate=0.8%
+  database_activity: |
+    pid state wait_event query
+    812 active IO DataFileRead SELECT * FROM search_documents WHERE tenant_id = $1 ORDER BY updated_at DESC LIMIT 50;
+    830 active Lock relation UPDATE search_counters SET total = total + 1 WHERE tenant_id = $1;
+expected_evidence:
+  - p95 latency for the search endpoint is nearly 3 seconds
+  - database queries are waiting on IO and relation locks
+  - the service is degraded but not fully down
+safe_next_steps:
+  - inspect recent query plan or index changes for search traffic
+  - compare lock contention with the previous release window
+  - avoid scaling guesses until the database bottleneck is confirmed

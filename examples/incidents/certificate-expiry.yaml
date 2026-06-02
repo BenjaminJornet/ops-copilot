@@ -1,0 +1,19 @@
+name: certificate-expiry
+summary: TLS termination is close to failing because a certificate is about to expire.
+question: Why are we getting warnings about the public API certificate?
+fake_outputs:
+  openssl_certificate: |
+    subject=CN=api.example.test
+    issuer=CN=Example Test Intermediate CA
+    notBefore=Jun  2 00:00:00 2026 GMT
+    notAfter=Jun  5 23:59:59 2026 GMT
+  ingress_events: |
+    Warning TLSCertificateExpiring ingress/api-gateway certificate expires in 3 days
+expected_evidence:
+  - the public certificate expires within 3 days
+  - ingress is already emitting certificate expiry warnings
+  - the problem is with certificate validity, not application uptime
+safe_next_steps:
+  - verify the certificate renewal job or issuer integration
+  - confirm the replacement certificate can be staged before expiry
+  - avoid unnecessary application restarts because TLS is the failing boundary

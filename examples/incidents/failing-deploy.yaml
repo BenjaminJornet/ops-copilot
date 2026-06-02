@@ -1,0 +1,18 @@
+name: failing-deploy
+summary: A deployment job is failing before the service can roll out.
+question: Why is the production deploy failing?
+fake_outputs:
+  deploy_status: |
+    release-2026-06-02 status=failed step=database-migrate duration=03:12
+  deploy_logs: |
+    Running migration 202606020815_add_invoice_index.sql
+    ERROR: relation "invoices" does not exist
+    Deployment aborted before service restart
+expected_evidence:
+  - the deploy failed during the database migration step
+  - migration logs show a missing invoices relation
+  - the application was not restarted after the failed release
+safe_next_steps:
+  - verify migration ordering in the release bundle
+  - compare staging schema with production before re-running
+  - avoid forcing the deploy until the schema mismatch is explained

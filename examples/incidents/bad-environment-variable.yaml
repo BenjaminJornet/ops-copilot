@@ -1,0 +1,19 @@
+name: bad-environment-variable
+summary: A service boots with invalid configuration after an environment change.
+question: Why did the worker stop processing jobs after the config update?
+fake_outputs:
+  systemd_status: |
+    worker.service - Background Worker
+    Active: activating (auto-restart) (Result: exit-code)
+    Main PID: 5541 (code=exited, status=1/FAILURE)
+  journalctl_service: |
+    worker[5541]: ValueError: invalid REDIS_URL 'redis:/cache:6379'
+    systemd[1]: worker.service: Scheduled restart job, restart counter is at 9.
+expected_evidence:
+  - the worker is stuck in an auto-restart loop
+  - logs show an invalid REDIS_URL value
+  - the failure started after configuration was loaded
+safe_next_steps:
+  - compare the deployed environment variable with the last known good value
+  - validate the URL format before another restart attempt
+  - avoid changing unrelated runtime settings during recovery

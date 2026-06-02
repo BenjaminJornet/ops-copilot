@@ -5,6 +5,7 @@ from pathlib import Path
 import pytest
 import yaml
 
+from ops_copilot.replay import render_replay
 from ops_copilot.tools.registry import ToolRegistry
 
 
@@ -264,6 +265,17 @@ def test_incident_fixtures_are_safe_and_structured():
         serialized = path.read_text(encoding="utf-8").lower()
         assert "100.64" not in serialized
         assert "api_key=" not in serialized
+
+
+def test_incident_fixtures_render_replay_output():
+    root = Path(__file__).resolve().parents[1]
+    for path in (root / "examples" / "incidents").glob("*.yaml"):
+        data = yaml.safe_load(path.read_text(encoding="utf-8"))
+        rendered = render_replay(data)
+
+        assert f"incident={data['name']}" in rendered
+        assert "expected_evidence:" in rendered
+        assert "safe_next_steps:" in rendered
 
 
 @pytest.mark.asyncio
