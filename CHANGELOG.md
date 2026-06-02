@@ -4,7 +4,7 @@
 
 ## 0.1.8
 
-- Replaced Codex-specific repository documentation with agent-agnostic maintenance guidance.
+- Replaced platform-specific repository documentation with agent-agnostic maintenance guidance.
 - Added architecture documentation and a terminal demo SVG preview.
 - Added a recorded asciinema terminal demo and deterministic recording script.
 - Added a `bad-env-var` incident fixture with replay CLI coverage.
