@@ -1,0 +1,24 @@
+name: slow-api
+summary: API latency increases after deploy while the host remains healthy.
+question: Why are API requests slow even though the host looks healthy?
+fake_outputs:
+  service_status: |
+    api.service - Example API
+    Loaded: loaded (/etc/systemd/system/api.service; enabled)
+    Active: active (running)
+    Main PID: 4242 (python)
+  latency_snapshot: |
+    route=/v1/search p50=180ms p95=2400ms p99=5100ms
+    route=/v1/health p50=8ms p95=14ms p99=20ms
+  recent_logs: |
+    WARN slow request route=/v1/search duration_ms=4860 query_id=demo-183
+    WARN upstream cache timeout route=/v1/search duration_ms=2500
+    INFO worker queue depth=42
+expected_evidence:
+  - search route p95 latency is above two seconds
+  - health route latency is normal
+  - upstream cache timeouts and queue depth point to dependency pressure
+safe_next_steps:
+  - inspect upstream cache health and saturation
+  - compare queue depth before and after the deploy
+  - avoid restarting healthy API workers before confirming dependency status

@@ -17,3 +17,4 @@ These fixtures intentionally avoid real hostnames, private IPs, credentials, and
 - `disk-full.yaml`: root filesystem pressure caused by large application logs.
 - `failing-systemd-service.yaml`: service-level failure evidence from systemd-style output.
 - `high-cpu.yaml`: host-level CPU pressure evidence.
+- `slow-api.yaml`: route-level latency and dependency pressure despite healthy service status.

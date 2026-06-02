@@ -105,6 +105,18 @@ def test_packaged_cli_replays_bad_env_var_fixture():
     assert "DATABASE_URL is missing" in result.stdout
 
 
+def test_packaged_cli_replays_slow_api_fixture():
+    result = subprocess.run(
+        ["uv", "run", "ops-copilot", "replay", "examples/incidents/slow-api.yaml"],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+
+    assert "incident=slow-api" in result.stdout
+    assert "search route p95 latency" in result.stdout
+
+
 def test_orchestrated_demo_runs():
     root = Path(__file__).resolve().parents[2]
     if not (root / "ollama-orchestra").exists():
