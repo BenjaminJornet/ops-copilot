@@ -1,0 +1,8 @@
+{"version": 2, "width": 80, "height": 24, "timestamp": 1780387430, "env": {"SHELL": "/bin/zsh", "TERM": "xterm-256color"}}
+[0.157733, "o", "\u001b[1;32m$ uv run ops-copilot replay examples/incidents/disk-full.yaml\u001b[0m\r\n"]
+[4.913352, "o", "incident=disk-full\r\nquestion='Why is the host running out of disk space?'\r\n\r\nevidence:\r\ntool=disk_usage\r\nFilesystem Size Used Avail Use% Mounted on\r\n/dev/vda1   40G  38G  1.2G  97% /\r\ntool=largest_dirs\r\n21G /var/log/app\r\n9G /var/lib/docker\r\n2G /home/deploy\r\n\r\nexpected_evidence:\r\n- root filesystem at 97 percent\r\n- application logs are the largest directory\r\n\r\nsafe_next_steps:\r\n- inspect log rotation settings\r\n- archive or rotate reviewed logs\r\n- avoid destructive cleanup without approval\r\n"]
+[6.407706, "o", "\r\n\u001b[1;32m$ uv run ops-copilot review examples/toolpacks/systemd.yaml\u001b[0m\r\n"]
+[12.141564, "o", "toolpack_review status=ok\r\n"]
+[13.109075, "o", "\r\n\u001b[1;32m$ uv run python examples/orchestrated_demo.py\u001b[0m\r\n"]
+[17.474226, "o", "==> Starting Coordinated Local Investigation...\r\nQuestion: Why is the host slow?\r\n\r\n"]
+[17.607497, "o", "\r\n\r\n==> Orchestrated Events Emitted:\r\n  event=semaphore_created url=http://localhost:11434 score=None\r\n  event=semaphore_acquired url=http://localhost:11434 score=None\r\n  event=endpoint_score_updated url=http://localhost:11434 score=0.8983854999532923\r\n  event=chat_success url=http://localhost:11434 score=None\r\n  event=semaphore_released url=http://localhost:11434 score=None\r\n"]

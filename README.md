@@ -34,6 +34,8 @@ Starting Coordinated Local Investigation
 
 The orchestrated demo uses `ops-copilot`, `ollama-orchestra`, and `langchain-content-normalizer` together when the three repos are checked out side-by-side.
 
+A recorded asciinema demo is available at `docs/assets/ops-copilot-demo.cast`.
+
 ## Who this is for
 
 - SREs and platform engineers running self-hosted infrastructure.

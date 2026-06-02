@@ -93,6 +93,18 @@ def test_packaged_cli_replays_incident():
     assert "safe_next_steps:" in result.stdout
 
 
+def test_packaged_cli_replays_bad_env_var_fixture():
+    result = subprocess.run(
+        ["uv", "run", "ops-copilot", "replay", "examples/incidents/bad-env-var.yaml"],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+
+    assert "incident=bad-env-var" in result.stdout
+    assert "DATABASE_URL is missing" in result.stdout
+
+
 def test_orchestrated_demo_runs():
     root = Path(__file__).resolve().parents[2]
     if not (root / "ollama-orchestra").exists():
