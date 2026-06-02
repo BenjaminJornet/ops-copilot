@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+## 0.1.8
+
+- Replaced Codex-specific repository documentation with agent-agnostic maintenance guidance.
+- Added architecture documentation and a terminal demo SVG preview.
+- Added a recorded asciinema terminal demo and deterministic recording script.
+- Added a `bad-env-var` incident fixture with replay CLI coverage.
+- Updated GitHub Actions to newer resolvable major versions where available.
+
 ## 0.1.7
 
 - Added packaged `ops-copilot review` and `ops-copilot replay` maintainer commands.
