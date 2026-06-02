@@ -1,0 +1,20 @@
+name: high-memory
+summary: A Linux host is close to exhausting memory and swapping heavily.
+question: Why is the application host running out of memory?
+fake_outputs:
+  free_memory: |
+    total        used        free      shared  buff/cache   available
+    Mem:           15Gi        14Gi       420Mi       190Mi       860Mi       610Mi
+    Swap:         2.0Gi       1.7Gi       300Mi
+  top_processes: |
+    PID USER   %MEM COMMAND
+    942 app    68.4 java -jar api.jar
+    311 redis   6.1 redis-server *:6379
+expected_evidence:
+  - available memory is below 1 GiB
+  - swap usage is already elevated
+  - the java api process is the main memory consumer
+safe_next_steps:
+  - inspect recent heap growth or cache changes
+  - compare request volume against normal baseline
+  - avoid restarting the host until memory pressure is understood

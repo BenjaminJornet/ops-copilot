@@ -1,0 +1,18 @@
+name: docker-restart-loop
+summary: A containerized service is restarting continuously after launch.
+question: Why does the API container keep restarting?
+fake_outputs:
+  docker_ps: |
+    CONTAINER ID   IMAGE         STATUS                        NAMES
+    81ab2c4ef901   api:20260602  Restarting (1) 12 seconds ago api
+  docker_logs: |
+    2026-06-02T08:14:01Z panic: unable to reach postgres: dial tcp db:5432: connect: connection refused
+    2026-06-02T08:14:01Z exiting with status 1
+expected_evidence:
+  - the api container is in a restart loop
+  - startup logs show a refused connection to postgres
+  - the container exits with status 1 immediately after boot
+safe_next_steps:
+  - verify database container health and network reachability
+  - compare compose or secret changes made with this image rollout
+  - avoid deleting containers or volumes before the dependency issue is confirmed
