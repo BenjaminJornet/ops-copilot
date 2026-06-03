@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## 0.1.10
+
+- Added a reviewed nginx toolpack with bounded log inspection and safety tests.
+- Added a pytest-cov coverage gate to CI with an initial 75% threshold.
+- Added `ops-copilot review --json` for CI-friendly toolpack review output.
+
 ## 0.1.9
 
 - Added a `slow-api` incident fixture with replay CLI coverage.
