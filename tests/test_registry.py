@@ -313,12 +313,31 @@ tools:
 
 def test_example_toolpacks_load():
     root = Path(__file__).resolve().parents[1]
-    for name in ["linux-host.yaml", "systemd.yaml", "docker.yaml"]:
+    for name in ["linux-host.yaml", "systemd.yaml", "docker.yaml", "nginx.yaml"]:
         tools = ToolRegistry(
             FakeSSH(),
             config_path=root / "examples" / "toolpacks" / name,
         ).load()
         assert tools, f"expected {name} to define at least one tool"
+
+
+@pytest.mark.asyncio
+async def test_nginx_toolpack_restricts_log_file():
+    root = Path(__file__).resolve().parents[1]
+    tools = ToolRegistry(
+        FakeSSH(),
+        config_path=root / "examples" / "toolpacks" / "nginx.yaml",
+    ).load()
+    logs_tool = next(tool for tool in tools if tool.name == "nginx_recent_access_logs")
+
+    assert "tail -n 50 /var/log/nginx/access.log" in await logs_tool._arun(
+        log_file="access.log",
+        lines=50,
+    )
+    result = await logs_tool._arun(log_file="../../etc/passwd", lines=50)
+
+    assert result.startswith("[TOOL ERROR]")
+    assert "allowed values" in result
 
 
 def test_incident_fixtures_are_safe_and_structured():
