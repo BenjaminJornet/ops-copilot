@@ -1,0 +1,34 @@
+tools:
+  - name: nginx_config_test
+    type: shell
+    description: Validate nginx configuration syntax without reloading it.
+    command: nginx -t
+    timeout_seconds: 10
+    max_output_chars: 12000
+
+  - name: nginx_recent_access_logs
+    type: shell
+    description: Show recent nginx access log lines from an allowed log file.
+    command: tail -n {lines} /var/log/nginx/{log_file}
+    timeout_seconds: 10
+    max_output_chars: 20000
+    parameters:
+      log_file:
+        type: string
+        allowed_values: [access.log, error.log]
+      lines:
+        type: integer
+        required: false
+        default: 100
+
+  - name: nginx_recent_error_summary
+    type: shell
+    description: Summarize recent nginx error log lines without exposing arbitrary grep patterns.
+    command: tail -n {lines} /var/log/nginx/error.log
+    timeout_seconds: 10
+    max_output_chars: 20000
+    parameters:
+      lines:
+        type: integer
+        required: false
+        default: 100

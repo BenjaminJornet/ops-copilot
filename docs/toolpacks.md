@@ -9,6 +9,7 @@ They are examples, not a default security policy. Review every command before us
 - `examples/toolpacks/linux-host.yaml`: host-level uptime, disk, memory, and process snapshots.
 - `examples/toolpacks/systemd.yaml`: systemd status and recent journal logs.
 - `examples/toolpacks/docker.yaml`: Docker container list, stats, and logs.
+- `examples/toolpacks/nginx.yaml`: nginx config validation and recent access/error logs.
 
 ## Loading a toolpack
 
