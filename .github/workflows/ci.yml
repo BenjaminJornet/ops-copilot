@@ -26,3 +26,5 @@ jobs:
         run: uv run ruff check .
       - name: Test
         run: uv run pytest
+      - name: Coverage
+        run: uv run pytest --cov=ops_copilot --cov-report=term-missing --cov-fail-under=75

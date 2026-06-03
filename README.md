@@ -214,6 +214,7 @@ graph = InvestigationGraph(
 uv sync --dev
 uv run ruff check .
 uv run pytest
+uv run pytest --cov=ops_copilot --cov-report=term-missing --cov-fail-under=75
 uv run python scripts/smoke.py
 uv build
 ```
