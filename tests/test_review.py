@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import subprocess
 from pathlib import Path
 
@@ -133,6 +134,13 @@ def test_cli_main_review_and_replay(capsys):
 
     assert cli_main(["replay", "examples/incidents/disk-full.yaml"]) == 0
     assert "incident=disk-full" in capsys.readouterr().out
+
+
+def test_cli_main_review_json_output(capsys):
+    assert cli_main(["review", "examples/toolpacks/systemd.yaml", "--json"]) == 0
+
+    payload = json.loads(capsys.readouterr().out)
+    assert payload == {"status": "ok", "findings": []}
 
 
 def test_cli_main_returns_error_for_bad_toolpack(tmp_path, capsys):

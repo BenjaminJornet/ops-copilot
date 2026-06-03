@@ -20,6 +20,15 @@ ssh = SSHClient(host="server.example.com", user="deploy", key_path="~/.ssh/id_ed
 tools = ToolRegistry(ssh, config_path="examples/toolpacks/linux-host.yaml").load()
 ```
 
+## CI review
+
+Use the CLI to review toolpacks in text or JSON form:
+
+```bash
+ops-copilot review examples/toolpacks/nginx.yaml
+ops-copilot review examples/toolpacks/nginx.yaml --json
+```
+
 ## Safety notes
 
 - Prefer read-only commands.

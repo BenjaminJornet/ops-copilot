@@ -146,6 +146,7 @@ If `OPS_COPILOT_API_KEY` is set, clients must send `X-API-Key`.
 
 ```bash
 ops-copilot review examples/toolpacks/systemd.yaml
+ops-copilot review examples/toolpacks/systemd.yaml --json
 ops-copilot replay examples/incidents/disk-full.yaml
 ```
 
